@@ -10,5 +10,5 @@ export default abstract class ProcessSchedulerAlgo {
         this.processes = processes;
     }
 
-    abstract execute() : SchedulerProcessExecutionResult;
+    abstract schedule() : SchedulerProcessExecutionResult;
 }

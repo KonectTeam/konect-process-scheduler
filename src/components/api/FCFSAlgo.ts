@@ -8,7 +8,7 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
         super(processes);
     }
     
-    execute(): SchedulerProcessExecutionResult {
+    schedule(): SchedulerProcessExecutionResult {
         // check if there is negatives values for the arrival time or burst time
         if (this.processes.some(process => process.arrivalTime < 0 || process.burstTime < 0)) {
             throw 'Negative numbers are invalid for the arrival time or burst time';
@@ -34,7 +34,7 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
             const arrivalTime = currentProcess.arrivalTime;
             const burstTime = currentProcess.burstTime;
 
-            // wait until we can execute the process
+            // wait until we can schedule the process
             if (currentTime < arrivalTime) {
                 const beginTime = currentTime;
                 while (currentTime < arrivalTime) {
@@ -47,7 +47,7 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
                     process: '_'
                 });
             } else {
-                // we can execute the process
+                // we can schedule the process
                 const end = currentTime + burstTime;
                 const begin = currentTime;
                 while (currentTime < end) {
