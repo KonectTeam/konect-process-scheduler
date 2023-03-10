@@ -10,14 +10,12 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
     
     execute(): SchedulerProcessExecutionResult {
         // check if there is negatives values for the arrival time or burst time
-        let invalidProcess = this.processes.find(process => process.arrivalTime < 0 || process.burstTime < 0);
-        if (invalidProcess !== undefined) {
+        if (this.processes.some(process => process.arrivalTime < 0 || process.burstTime < 0)) {
             throw 'Negative numbers are invalid for the arrival time or burst time';
         }
 
         // check now if there is at least a process with a burst time equal to 0
-        invalidProcess = this.processes.find(process => process.burstTime === 0);
-        if (invalidProcess !== undefined) {
+        if (this.processes.some(process => process.burstTime === 0)) {
             throw '0 burst time is invalid';
         }
 
@@ -28,7 +26,7 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
         let currentProcess: SchedulerProcess;
 
         // sort the processes by their arrival time
-        let processes = this.processes.sort((p1, p2) => p1.arrivalTime - p2.arrivalTime);
+        let processes = [...this.processes].sort((p1, p2) => p1.arrivalTime - p2.arrivalTime);
 
         while(processes.length > 0) {
             currentProcess = processes[0];
@@ -62,8 +60,6 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
                     process: currentProcess.name
                 });
 
-                processes = processes.filter(process => process.name !== currentProcess.name);
-
                 processesInfo.push({
                     arrivalTime,
                     burstTime,
@@ -71,6 +67,8 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
                     turnAroundTime: end - arrivalTime,
                     waitingTime: (end - arrivalTime) - burstTime
                 });
+
+                processes = processes.filter(process => process.name !== currentProcess.name);
             }            
         }
 
