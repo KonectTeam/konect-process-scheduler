@@ -13,6 +13,36 @@ describe('Test the FCFS algorithm with many scenarios', () => {
         expect(result.steps.length).to.be.equal(0);
     });
 
+    it('Should throw an error because there is a process with negative burst time', () => {
+        const algo = new FCFSAlgo([{
+            name: 'A',
+            arrivalTime: 0,
+            burstTime: -10
+        }]);
+
+        expect(() => algo.execute()).to.throw('Negative numbers are invalid for the arrival time or burst time');
+    });
+
+    it('Should throw an error because there is a process with negative arrival time', () => {
+        const algo = new FCFSAlgo([{
+            name: 'A',
+            arrivalTime: -10,
+            burstTime: 10
+        }]);
+
+        expect(() => algo.execute()).to.throw('Negative numbers are invalid for the arrival time or burst time');
+    });
+
+    it('Should throw an error because there is a process with a burst time equal to 0', () => {
+        const algo = new FCFSAlgo([{
+            name: 'A',
+            arrivalTime: 0,
+            burstTime: 0
+        }]);
+
+        expect(() => algo.execute()).to.throw('0 burst time is invalid');
+    });
+
     it('Should return three steps with an empty one', () => {
         const algo = new FCFSAlgo([{
             name: 'A',

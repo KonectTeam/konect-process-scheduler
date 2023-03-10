@@ -9,9 +9,21 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
     }
     
     execute(): SchedulerProcessExecutionResult {
+        // check if there is negatives values for the arrival time or burst time
+        let invalidProcess = this.processes.find(process => process.arrivalTime < 0 || process.burstTime < 0);
+        if (invalidProcess !== undefined) {
+            throw 'Negative numbers are invalid for the arrival time or burst time';
+        }
+
+        // check now if there is at least a process with a burst time equal to 0
+        invalidProcess = this.processes.find(process => process.burstTime === 0);
+        if (invalidProcess !== undefined) {
+            throw '0 burst time is invalid';
+        }
+
         const steps = new Array<SchedulerStep>();
         const processesInfo = new Array<SchedulerProcessExecutionInfo>();
-
+        const executionStart = new Date().getTime();
         let currentTime = 0;
         let currentProcess: SchedulerProcess;
 
@@ -64,7 +76,8 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
 
         return {
             steps,
-            processesInfo
+            processesInfo,
+            executionTimeInMS: new Date().getTime() - executionStart
         };
     }    
 }

@@ -21,4 +21,5 @@ export interface SchedulerProcessExecutionInfo {
 export interface SchedulerProcessExecutionResult {
     steps: SchedulerStep[];
     processesInfo: SchedulerProcessExecutionInfo[];
+    executionTimeInMS: number;
 }
