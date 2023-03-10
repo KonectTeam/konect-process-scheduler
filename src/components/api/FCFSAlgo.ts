@@ -1,6 +1,6 @@
 import ProcessSchedulerAlgo from "./ProcessSchedulerAlgo";
 
-import { SchedulerStep, SchedulerProcess, SchedulerProcessExecutionResult } from './api';
+import { SchedulerStep, SchedulerProcess, SchedulerProcessExecutionResult, SchedulerProcessExecutionInfo } from './api';
 
 export default class FCFSAlgo extends ProcessSchedulerAlgo {
     
@@ -10,15 +10,17 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
     
     execute(): SchedulerProcessExecutionResult {
         const steps = new Array<SchedulerStep>();
+        const processesInfo = new Array<SchedulerProcessExecutionInfo>();
 
         let currentTime = 0;
         let currentProcess: SchedulerProcess;
 
         // sort the processes by their arrival time
-        const processes = this.processes.sort((p1, p2) => p1.arrivalTime - p2.arrivalTime);
+        let processes = this.processes.sort((p1, p2) => p1.arrivalTime - p2.arrivalTime);
 
         while(processes.length > 0) {
             currentProcess = processes[0];
+
             const arrivalTime = currentProcess.arrivalTime;
             const burstTime = currentProcess.burstTime;
 
@@ -45,13 +47,24 @@ export default class FCFSAlgo extends ProcessSchedulerAlgo {
                 steps.push({
                     begin,
                     end,
-                    process: currentProcess.process
+                    process: currentProcess.name
+                });
+
+                processes = processes.filter(process => process.name !== currentProcess.name);
+
+                processesInfo.push({
+                    arrivalTime,
+                    burstTime,
+                    finishTime: end,
+                    turnAroundTime: end - arrivalTime,
+                    waitingTime: (end - arrivalTime) - burstTime
                 });
             }            
         }
 
         return {
-            steps
+            steps,
+            processesInfo
         };
     }    
 }

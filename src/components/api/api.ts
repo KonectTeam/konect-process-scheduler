@@ -5,11 +5,20 @@ export interface SchedulerStep {
 }
 
 export interface SchedulerProcess {
-    process: string;
+    name: string;
     arrivalTime: number;
     burstTime: number;
 }
 
+export interface SchedulerProcessExecutionInfo {
+    arrivalTime: number;
+    burstTime: number;
+    finishTime: number;
+    turnAroundTime: number;
+    waitingTime: number;
+}
+
 export interface SchedulerProcessExecutionResult {
     steps: SchedulerStep[];
+    processesInfo: SchedulerProcessExecutionInfo[];
 }
